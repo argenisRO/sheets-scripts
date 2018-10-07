@@ -213,7 +213,7 @@ function record_attendance() {
         Browser.msgBox("Date is already recorded. Make sure to set the correct war date before running the script.");
         update_status(console_ss, "Error");
     } else if (current_nodewar == null) {
-        Browser.msgBox("Date does not exist. Please provide the correct war date in the console sheet and avoid changing the sheet names of the wars.");
+        Browser.msgBox("War Date provided does not exist. Please enter the correct war date in the console sheet. Cell: 'c8'");
         update_status(console_ss, "Error");
     } else {
         update_status(console_ss, "Working...");
@@ -225,18 +225,18 @@ function record_attendance() {
         current_nodewar.getRange(47, 8, 5).copyTo((attendance_history.getRange(105, last_column + 1, 5)), { contentsOnly: true });
         attendance_history.getRange(1, last_column + 1).setValue(console_ss.getRange("C8").getDisplayValue());
 
-        var previous_attendance_payout = attendance_sheet.getRange(1, attendance_sheet.getLastColumn() - 3, 103);
-        attendance_sheet.insertColumnAfter(attendance_sheet.getLastColumn() - 3);
-        previous_attendance_payout.copyTo(attendance_sheet.getRange(1, attendance_sheet.getLastColumn() - 3, 103));
-        attendance_sheet.getRange(1, attendance_sheet.getLastColumn() - 3).setValue(console_ss.getRange("C8").getDisplayValue());
+        var previous_attendance_payout = attendance_sheet.getRange(1, attendance_sheet.getLastColumn(), 103);
+        attendance_sheet.insertColumnAfter(attendance_sheet.getLastColumn());
+        previous_attendance_payout.copyTo(attendance_sheet.getRange(1, attendance_sheet.getLastColumn() + 1, 103));
+        attendance_sheet.getRange(1, attendance_sheet.getLastColumn()).setValue(console_ss.getRange("C8").getDisplayValue());
 
-        var attendance_percent = attendance_sheet.getRange(4, attendance_sheet.getLastColumn() - 1, 103);
-        var attendance_status = attendance_sheet.getRange(4, attendance_sheet.getLastColumn(), 103).getFormulas();
-        attendance_sheet.insertColumnAfter(attendance_sheet.getLastColumn() - 1);
-        attendance_percent.copyTo(attendance_sheet.getRange(4, attendance_sheet.getLastColumn() - 1, 103));
-        attendance_sheet.getRange(1, attendance_sheet.getLastColumn() - 2).copyTo(attendance_sheet.getRange(1, attendance_sheet.getLastColumn() - 1));
-        attendance_sheet.deleteColumn(attendance_sheet.getLastColumn() - 2);
-        attendance_sheet.getRange(4, attendance_sheet.getLastColumn(), 103).setFormulas(attendance_status);
+        var attendance_percent = attendance_sheet.getRange(4, 7, 100);
+        var attendance_status = attendance_sheet.getRange(4, 8, 100).getFormulas();
+        attendance_sheet.insertColumnAfter(7);
+        attendance_percent.copyTo(attendance_sheet.getRange(4, 8, 100));
+        attendance_sheet.getRange(1, 7).copyTo(attendance_sheet.getRange(1, 8));
+        attendance_sheet.deleteColumn(7);
+        attendance_sheet.getRange(4, 8, 100).setFormulas(attendance_status);
 
         update_status(console_ss, "Successfully added '" + current_nodewar.getSheetName() + "' to the attendance.");
 
