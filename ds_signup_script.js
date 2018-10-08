@@ -51,13 +51,13 @@ function add_parties() {
     var console_ss = ss.getSheetByName("Console");
     var members = {}
     var location_e = {
-        Harass: { sheet: ["T57:T61", "W57:W61"], console: ["B29:B38"], sub: ["B40:B44"] },
-        Flex: { sheet: ["Q57:Q61"], console: ["B49:B53"], sub: ["B55:B59"] },
-        Cannons: { sheet: ["Q15:Q19"], console: ["J29:J33"], sub: ["J35:J39"] },
-        "Cannon Killer": { sheet: ["T15:T19"], console: ["N29:N33"], sub: ["N35:N39"] },
-        "Backline Peel": { sheet: ["W15:W19"], console: ["J49:J53"], sub: ["J55:J59"] },
-        Structures: { sheet: ["W8:W12"], console: ["F49:F53"], sub: ["F55:F59"] },
-        Defense: { sheet: ["Q8:Q12", "T8:T12"], console: ["F29:F38"], sub: ["F40:F44"] },
+        Harass: { sheet: ["T57:T61", "W57:W61"],            console: ["B29:B38"], sub: ["B40:B44"] },
+        Flex: { sheet: ["Q57:Q61"],                         console: ["B49:B53"], sub: ["B55:B59"] },
+        Cannons: { sheet: ["Q15:Q19"],                      console: ["J29:J33"], sub: ["J35:J39"] },
+        "Cannon Killer": { sheet: ["T15:T19"],              console: ["N29:N33"], sub: ["N35:N39"] },
+        "Backline Peel": { sheet: ["W15:W19"],              console: ["J49:J53"], sub: ["J55:J59"] },
+        Structures: { sheet: ["W8:W12"],                    console: ["F49:F53"], sub: ["F55:F59"] },
+        Defense: { sheet: ["Q8:Q12", "T8:T12"],             console: ["F29:F38"], sub: ["F40:F44"] },
     };
 
     var location_a = {
@@ -87,11 +87,11 @@ function add_parties() {
 
     for (var value in location_e) {
         var formed_party = []
-        var console_names = flatten(console_ss.getRange(value.console).getValues());
+        var console_names = flatten(console_ss.getRange(location_e[value].console).getValues());
         var matched_names = find_match(console_names, Object.keys(members)).map(function (name) { delete members[name]; return name; });
 
         if (matched_names.length < 5) {
-            var sub_names = flatten(console_ss.getRange(value.sub).getValues());
+            var sub_names = flatten(console_ss.getRange(location_e[value].sub).getValues());
             var matched_subs = find_match(sub_names, Object.keys(members));
 
             matched_subs.slice(0, (5 - matched_names.length)).map(function (name) { delete members[name]; matched_names.push(name); return name; });
@@ -109,7 +109,7 @@ function add_parties() {
         }
 
         formed_party.map(function (party, index) {
-            nodewar_sheet.getRange(value.sheet[index]).setValues(party.map(function (name) { return [name]; }));
+            nodewar_sheet.getRange(location_e[value].sheet[index]).setValues(party.map(function (name) { return [name]; }));
         });
     }
 
