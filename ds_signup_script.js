@@ -51,13 +51,13 @@ function add_parties() {
     var console_ss = ss.getSheetByName("Console");
     var members = {}
     var location_e = {
-        Harass: { sheet: ["T57:T61", "W57:W61"],            console: ["B29:B38"], sub: ["B40:B44"] },
-        Flex: { sheet: ["Q57:Q61"],                         console: ["B49:B53"], sub: ["B55:B59"] },
-        Cannons: { sheet: ["Q15:Q19"],                      console: ["J29:J33"], sub: ["J35:J39"] },
-        "Cannon Killer": { sheet: ["T15:T19"],              console: ["N29:N33"], sub: ["N35:N39"] },
-        "Backline Peel": { sheet: ["W15:W19"],              console: ["J49:J53"], sub: ["J55:J59"] },
-        Structures: { sheet: ["W8:W12"],                    console: ["F49:F53"], sub: ["F55:F59"] },
-        Defense: { sheet: ["Q8:Q12", "T8:T12"],             console: ["F29:F38"], sub: ["F40:F44"] },
+        Harass: {               sheet: ["T57:T61", "W57:W61"], console: ["B29:B38"], sub: ["B40:B44"] },
+        Flex: {                 sheet: ["Q57:Q61"],            console: ["B49:B53"], sub: ["B55:B59"] },
+        Cannons: {              sheet: ["Q15:Q19"],            console: ["J29:J33"], sub: ["J35:J39"] },
+        "Cannon Killer": {      sheet: ["T15:T19"],            console: ["N29:N33"], sub: ["N35:N39"] },
+        "Backline Peel": {      sheet: ["W15:W19"],            console: ["J49:J53"], sub: ["J55:J59"] },
+        Structures: {           sheet: ["W8:W12"],             console: ["F49:F53"], sub: ["F55:F59"] },
+        Defense: {              sheet: ["Q8:Q12", "T8:T12"],   console: ["F29:F38"], sub: ["F40:F44"] },
     };
 
     var location_a = {
@@ -226,9 +226,12 @@ function record_attendance() {
         attendance_history.getRange(1, last_column + 1).setValue(console_ss.getRange("C8").getDisplayValue());
 
         var previous_attendance_payout = attendance_sheet.getRange(1, attendance_sheet.getLastColumn(), 103);
+        var backup_attendance = attendance_sheet.getRange(3, attendance_sheet.getLastColumn());
         attendance_sheet.insertColumnAfter(attendance_sheet.getLastColumn());
         previous_attendance_payout.copyTo(attendance_sheet.getRange(1, attendance_sheet.getLastColumn() + 1, 103));
         attendance_sheet.getRange(1, attendance_sheet.getLastColumn()).setValue(console_ss.getRange("C8").getDisplayValue());
+        backup_attendance.copyTo(attendance_sheet.getRange(4, attendance_sheet.getLastColumn(), 100));
+        attendance_sheet.getRange(4,attendance_sheet.getLastColumn() - 1).copyFormatToRange(attendance_sheet.getSheetId(), attendance_sheet.getLastColumn(), attendance_sheet.getLastColumn(), 4, 103)
 
         var attendance_percent = attendance_sheet.getRange(4, 7, 100);
         var attendance_status = attendance_sheet.getRange(4, 8, 100).getFormulas();
