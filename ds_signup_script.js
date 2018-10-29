@@ -218,9 +218,9 @@ function record_attendance() {
     } else {
         update_status(console_ss, "Working...");
 
-        var previous_attendance_war = attendance_history.getRange(1, last_column, 109);
+        var previous_attendance_war = attendance_history.getRange(1, last_column, 114);
         attendance_history.insertColumnAfter(last_column);
-        previous_attendance_war.copyTo(attendance_history.getRange(1, last_column + 1, 109));
+        previous_attendance_war.copyTo(attendance_history.getRange(1, last_column + 1, 114));
         current_nodewar.getRange(59, 11, 100).copyTo((attendance_history.getRange(4, last_column + 1, 100)), { contentsOnly: true });
         current_nodewar.getRange(47, 8, 5).copyTo((attendance_history.getRange(105, last_column + 1, 5)), { contentsOnly: true });
         attendance_history.getRange(1, last_column + 1).setValue(console_ss.getRange("C8").getDisplayValue());
