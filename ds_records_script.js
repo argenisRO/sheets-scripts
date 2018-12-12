@@ -3,15 +3,17 @@ import 'google-apps-script';
 function onEdit(e){
     if (e.value === "-" && e.source.getSheetName() === "Current Members" && e.range.getColumn() === 5){
         var archiveSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Archive')
-        var userArchiveData = e.source.getActiveSheet().getRange(e.range.getRow(), 2, 1, 29).getValues()
+        var userArchiveData = e.source.getActiveSheet().getRange(e.range.getRow(), 2, 1, 29)
         if (archiveSheet.getRange("A6:A").getValues().filter(function (value){
             return value[0] !== ""
         }).length > 0) {
             archiveSheet.insertRowBefore(6)
         }
         archiveSheet.getRange(6,1).setValue(new Date())
-        archiveSheet.getRange(6,2,1,29).setValues(userArchiveData)
+        archiveSheet.getRange(6,2,1,29).setValues(userArchiveData.getValues())
         archiveSheet.getRange("E:K").clearContent()
+        userArchiveData.clearContent()
+        sort_members()
     }
 }
 
