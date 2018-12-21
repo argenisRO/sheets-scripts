@@ -1,19 +1,57 @@
 import 'google-apps-script';
 
 function onEdit(e){
-    if (e.value === "-" && e.source.getSheetName() === "Current Members" && e.range.getColumn() === 5){
-        var archiveSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Archive')
-        var userArchiveData = e.source.getActiveSheet().getRange(e.range.getRow(), 2, 1, 29)
-        if (archiveSheet.getRange("A6:A").getValues().filter(function (value){
-            return value[0] !== ""
-        }).length > 0) {
-            archiveSheet.insertRowBefore(6)
+    if (e.value === "TRUE" && e.source.getSheetName() === "Current Members" && e.range.getColumn() === 5) {
+        var ui = SpreadsheetApp.getUi();
+        var removedUser = e.source.getActiveSheet().getRange(e.range.getRow(), e.range.getColumn() - 3).getValue();
+        var result = ui.alert("Confirmation", "Are you sure you want to remove " + removedUser + " from the guild?", ui.ButtonSet.YES_NO);
+
+        if (result == ui.Button.YES) {
+            var archiveSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Archive')
+            var userArchiveData = e.source.getActiveSheet().getRange(e.range.getRow(), 2, 1, 29)
+            if (archiveSheet.getRange("A6:A").getValues().filter(function (value){
+                return value[0] !== ""
+            }).length > 0) {
+                archiveSheet.insertRowBefore(6)
+            }
+            archiveSheet.getRange(6,1).setValue(new Date())
+            archiveSheet.getRange(6,2,1,29).setValues(userArchiveData.getValues())
+            archiveSheet.getRange("E:K").clearContent()
+            userArchiveData.clearContent()
+            sort_members()
+            return
+
         }
-        archiveSheet.getRange(6,1).setValue(new Date())
-        archiveSheet.getRange(6,2,1,29).setValues(userArchiveData.getValues())
-        archiveSheet.getRange("E:K").clearContent()
-        userArchiveData.clearContent()
-        sort_members()
+        e.range.getSheet().getRange(e.range.getRow(), e.range.getColumn()).setValue('FALSE') 
+    } else if (e.value === "TRUE" && e.source.getSheetName() === "Archive" && e.range.getColumn() === 5) {
+            var ui = SpreadsheetApp.getUi();
+            var reAddedUser = e.source.getActiveSheet().getRange(e.range.getRow(), e.range.getColumn() - 3).getValue();
+            var addResult = ui.alert("Confirmation", "Are you sure you want to re-add " + reAddedUser + " to the guild?", ui.ButtonSet.YES_NO);
+        
+            if (addResult == ui.Button.YES) {
+                e.range.getSheet().getRange(e.range.getRow(), e.range.getColumn()).setValue('FALSE')
+
+                var ss = SpreadsheetApp.getActiveSpreadsheet()
+                var current_members = ss.getSheetByName('Current Members')
+                var readd_user = e.range.getSheet().getRange(e.range.getRow(), e.range.getColumn() - 3, 1, 29).getValues()
+                
+                var current_membs = flatten(current_members.getRange('B6:B105').getValues())
+                var last_row = current_membs.filter(function(value) {return value != ''}).length + 6        
+                
+                if (current_membs.indexOf(e.range.getSheet().getRange(e.range.getRow(), e.range.getColumn() - 3).getValue()) === -1) {
+                    if (last_row < 105) {
+                        current_members.getRange(last_row, 2, 1, 29).setValues(readd_user)
+                        sort_members()
+                        return
+                    } else {
+                        Browser.msgBox('The guild is full.')
+                    }
+                } else {
+                    Browser.msgBox(reAddedUser + ' is already in the guild.')
+                }
+            }
+            // Incase of any failures, always return the original value back to FALSE
+            e.range.getSheet().getRange(e.range.getRow(), e.range.getColumn()).setValue('FALSE')   
     }
 }
 
