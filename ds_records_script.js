@@ -4,25 +4,27 @@ function onEdit(e){
     if (e.value === "TRUE" && e.source.getSheetName() === "Current Members" && e.range.getColumn() === 5) {
         var ui = SpreadsheetApp.getUi();
         var removedUser = e.source.getActiveSheet().getRange(e.range.getRow(), e.range.getColumn() - 3).getValue();
-        var result = ui.alert("Confirmation", "Are you sure you want to remove " + removedUser + " from the guild?", ui.ButtonSet.YES_NO);
+        if (removedUser !== "") {
+            var result = ui.alert("Confirmation", "Are you sure you want to remove " + removedUser + " from the guild?", ui.ButtonSet.YES_NO);
 
-        if (result == ui.Button.YES) {
-            var archiveSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Archive')
-            var userArchiveData = e.source.getActiveSheet().getRange(e.range.getRow(), 2, 1, 29)
-            if (archiveSheet.getRange("A6:A").getValues().filter(function (value){
-                return value[0] !== ""
-            }).length > 0) {
-                archiveSheet.insertRowBefore(6)
+            if (result == ui.Button.YES) {
+                var archiveSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Archive')
+                var userArchiveData = e.source.getActiveSheet().getRange(e.range.getRow(), 2, 1, 29)
+                if (archiveSheet.getRange("A6:A").getValues().filter(function (value){
+                    return value[0] !== ""
+                }).length > 0) {
+                    archiveSheet.insertRowBefore(6)
+                }
+                archiveSheet.getRange(6,1).setValue(new Date())
+                archiveSheet.getRange(6,2,1,29).setValues(userArchiveData.getValues())
+                archiveSheet.getRange("E:K").clearContent()
+                userArchiveData.clearContent()
+                sort_members()
+                return
+
             }
-            archiveSheet.getRange(6,1).setValue(new Date())
-            archiveSheet.getRange(6,2,1,29).setValues(userArchiveData.getValues())
-            archiveSheet.getRange("E:K").clearContent()
-            userArchiveData.clearContent()
-            sort_members()
-            return
-
         }
-        e.range.getSheet().getRange(e.range.getRow(), e.range.getColumn()).setValue('FALSE') 
+        e.range.getSheet().getRange(e.range.getRow(), e.range.getColumn()).setValue('FALSE')
     } else if (e.value === "TRUE" && e.source.getSheetName() === "Archive" && e.range.getColumn() === 5) {
             var ui = SpreadsheetApp.getUi();
             var reAddedUser = e.source.getActiveSheet().getRange(e.range.getRow(), e.range.getColumn() - 3).getValue();
