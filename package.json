@@ -1,0 +1,40 @@
+{
+    "name": "dsrecords",
+    "author": "ArgenisRO",
+    "version": "0.1.2819",
+    "description": "DeadSerious Sheet Scripts",
+    "main": "src/main.ts",
+    "dependencies": {},
+    "devDependencies": {
+        "@types/google-apps-script": "0.0.36",
+        "@types/jest": "^23.3.13",
+        "cpx": "^1.5.0",
+        "gas-webpack-plugin": "^1.0.2",
+        "jest": "^24.0.0",
+        "rimraf": "^2.6.3",
+        "ts-jest": "^23.10.5",
+        "ts-loader": "^5.3.3",
+        "typescript": "^3.2.4",
+        "webpack": "^4.29.0",
+        "webpack-cli": "^3.2.1"
+    },
+    "scripts": {
+        "test": "jest",
+        "build": "npm run test && rimraf dist && webpack && cpx appsscript.json dist",
+        "deploy": "npm run build && clasp push"
+    },
+    "jest": {
+        "transform": {
+            "^.+\\.tsx?$": "ts-jest"
+        },
+        "testRegex": "(src/.+(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+        "moduleFileExtensions": [
+            "ts",
+            "tsx",
+            "js",
+            "jsx",
+            "json",
+            "node"
+        ]
+    }
+}
